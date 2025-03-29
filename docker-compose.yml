@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  fastapi:
+    build: .
+    container_name: fastapi-webhook
+    ports:
+      - "8081:8001"
+    networks:
+      - coolify
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fastapi.rule=Host(`api.vietnamaisolution.com`)"
+      - "traefik.http.routers.fastapi.entrypoints=https"
+      - "traefik.http.routers.fastapi.tls.certresolver=letsencrypt"
+      - "traefik.http.services.fastapi.loadbalancer.server.port=8081"
+
+networks:
+  coolify:
+    external: true
